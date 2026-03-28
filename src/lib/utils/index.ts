@@ -1853,3 +1853,13 @@ export const displayFileHandler = (
 		stores.showFileNavPath.set(path);
 	}
 };
+
+/** Touch-primary UIs: skip programmatic #chat-input focus (traps OS keyboard, e.g. iOS PWA). */
+export function shouldProgrammaticallyRefocusChatInput(): boolean {
+	if (typeof window === 'undefined') return true;
+	try {
+		return !window.matchMedia('(pointer: coarse)').matches;
+	} catch {
+		return true;
+	}
+}

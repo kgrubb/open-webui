@@ -50,7 +50,8 @@
 		getFormattedTime,
 		getUserPosition,
 		getUserTimezone,
-		getWeekday
+		getWeekday,
+		shouldProgrammaticallyRefocusChatInput
 	} from '$lib/utils';
 	import { uploadFile } from '$lib/apis/files';
 	import { generateAutoCompletion } from '$lib/apis';
@@ -1034,10 +1035,8 @@
 		];
 		loaded = true;
 
-		window.setTimeout(() => {
-			const chatInput = document.getElementById('chat-input');
-			chatInput?.focus();
-		}, 0);
+		shouldProgrammaticallyRefocusChatInput() &&
+			window.setTimeout(() => document.getElementById('chat-input')?.focus(), 0);
 
 		window.addEventListener('keydown', onKeyDown);
 		window.addEventListener('keyup', onKeyUp);

@@ -159,6 +159,7 @@
 	import FormattingButtons from './RichTextInput/FormattingButtons.svelte';
 
 	import { PASTED_TEXT_CHARACTER_LIMIT } from '$lib/constants';
+	import { shouldProgrammaticallyRefocusChatInput } from '$lib/utils';
 	import { createLowlight } from 'lowlight';
 	import hljs from 'highlight.js';
 
@@ -470,8 +471,7 @@
 
 		selectNextTemplate(editor.view.state, editor.view.dispatch);
 
-		// Ensure the editor is still valid before trying to focus
-		focus();
+		(!messageInput || shouldProgrammaticallyRefocusChatInput()) && focus();
 	};
 
 	export const insertContent = (content) => {
@@ -485,7 +485,7 @@
 		// insert the HTML content at the current selection
 		editor.commands.insertContent(htmlContent);
 
-		focus();
+		(!messageInput || shouldProgrammaticallyRefocusChatInput()) && focus();
 	};
 
 	// Convert text to ProseMirror nodes, using hardBreak for newlines
@@ -841,7 +841,7 @@
 				...(collaboration && provider ? [provider.getEditorExtension()] : [])
 			],
 			content: collaboration ? undefined : content,
-			autofocus: messageInput ? true : false,
+			autofocus: !!(messageInput && shouldProgrammaticallyRefocusChatInput()),
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
 				editor = editor;
