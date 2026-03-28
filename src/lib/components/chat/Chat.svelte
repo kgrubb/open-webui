@@ -61,9 +61,13 @@
 		removeAllDetails,
 		getCodeBlockContents,
 		isYoutubeUrl,
-		displayFileHandler
+		displayFileHandler,
+		shouldProgrammaticallyRefocusChatInput
 	} from '$lib/utils';
 	import { AudioQueue } from '$lib/utils/audio';
+
+	const refocusChatInput = () =>
+		shouldProgrammaticallyRefocusChatInput() && document.getElementById('chat-input')?.focus();
 
 	import {
 		archiveChatById,
@@ -224,8 +228,7 @@
 				await setDefaults();
 			}
 
-			const chatInput = document.getElementById('chat-input');
-			chatInput?.focus();
+			refocusChatInput();
 		} else {
 			await goto('/');
 		}
@@ -757,8 +760,7 @@
 				} catch (e) {}
 			}
 
-			const chatInput = document.getElementById('chat-input');
-			chatInput?.focus();
+			refocusChatInput();
 		};
 		init();
 
@@ -1221,8 +1223,7 @@
 			$models.map((m) => m.id).includes(modelId) ? modelId : ''
 		);
 
-		const chatInput = document.getElementById('chat-input');
-		setTimeout(() => chatInput?.focus(), 0);
+		setTimeout(refocusChatInput, 0);
 	};
 
 	const loadChat = async () => {
@@ -1884,9 +1885,7 @@
 			history.messages[messages.at(-1).id].childrenIds.push(userMessageId);
 		}
 
-		// focus on chat input
-		const chatInput = document.getElementById('chat-input');
-		chatInput?.focus();
+		refocusChatInput();
 
 		saveSessionSelectedModels();
 
